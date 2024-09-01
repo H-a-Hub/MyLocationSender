@@ -31,9 +31,6 @@ fun readConfig(resources: Resources): Config {
 
     val jsonString = stringBuilder.toString()
 
-    // JSONオブジェクトとしてパース
-    val jsonObject = JSONObject(jsonString)
-
     val gson = Gson()
     val config = gson.fromJson(jsonString, Config::class.java)
 
