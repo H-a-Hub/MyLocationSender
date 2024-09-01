@@ -1,0 +1,4 @@
+{
+  "server_url": "https://your-server-endpoint.com/location",
+  "locate_interval_ms": 5000
+}
