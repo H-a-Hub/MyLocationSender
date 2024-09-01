@@ -42,7 +42,7 @@ object Logger {
     // コンソールとファイルにログを出力する共通関数
     private fun logToConsoleAndFile(logLevel: String, tag: String, message: String) {
         val timestamp = dateToString(Date())
-        val logMessage = "$timestamp - $logLevel/$tag: $message"
+        val logMessage = "$timestamp <$logLevel> [$tag]: $message"
 
         // コンソールに出力
         println(logMessage)
