@@ -20,6 +20,11 @@ class Locator(val _activity: Activity)
     private lateinit var _locationRequest: LocationRequest
     private lateinit var _locationCallback: LocationCallback
 
+    companion object {
+        // 位置情報機能許可へのリクエストコード
+        public val PERMISSION_REQUEST_CODE = 1001
+    }
+
     fun startService(updateInterval: Long = 5000, callback: (Location) -> Unit)
     {
         Logger.info("Locator", "startService() start interval:$updateInterval")
@@ -59,7 +64,7 @@ class Locator(val _activity: Activity)
             ActivityCompat.requestPermissions(
                 _activity,
                 arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                1001
+                PERMISSION_REQUEST_CODE
             )
             return
         }

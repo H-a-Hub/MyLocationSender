@@ -1,3 +1,5 @@
 <resources>
     <string name="app_name">MyLocationSender</string>
+    <string name="location_info">date:%1$s\nlatitude:%2$f\nlongitude:%3$f</string>
+    <string name="not_permit_location">not permit location</string>
 </resources>

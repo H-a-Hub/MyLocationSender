@@ -2,8 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <!--  数メートル単位の精度での位置情報取得への許可  -->
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <!--  数百メートルから数キロメートルの範囲での推定位置取得への許可  -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <!--  バックグラウンド位置情報取得への許可  -->
+    <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION" />
+    <!--  ネット回線利用への許可  -->
     <uses-permission android:name="android.permission.INTERNET"/>
 
     <application
