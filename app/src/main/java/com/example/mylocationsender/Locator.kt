@@ -51,6 +51,15 @@ class Locator(val _activity: Activity)
         }
 
         // パーミッションの確認とリクエスト
+        if (checkPermission()) return
+
+        // 位置情報の更新を開始
+        _fusedLocationClient.requestLocationUpdates(_locationRequest, _locationCallback, Looper.getMainLooper())
+
+        Logger.info("Locator", "startService() end")
+    }
+
+    private fun checkPermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(
                 _activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
@@ -63,16 +72,15 @@ class Locator(val _activity: Activity)
 
             ActivityCompat.requestPermissions(
                 _activity,
-                arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
                 PERMISSION_REQUEST_CODE
             )
-            return
+            return true
         }
-
-        // 位置情報の更新を開始
-        _fusedLocationClient.requestLocationUpdates(_locationRequest, _locationCallback, Looper.getMainLooper())
-
-        Logger.info("Locator", "startService() end")
+        return false
     }
 
     fun stopService()
