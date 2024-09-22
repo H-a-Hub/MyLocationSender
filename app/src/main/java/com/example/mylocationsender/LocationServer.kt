@@ -23,9 +23,10 @@ class LocationServer(val hostUrl:String)
         // これにより、メインスレッドをブロックせずにネットワーク操作を行うことができます。
         CoroutineScope(Dispatchers.IO).launch {
 
-            Logger.info("LocationServer", "sendLocation() start location:${location.toString()}")
+            Logger.info("LocationServer", "sendLocation() start")
+//            Logger.info("LocationServer", "sendLocation() start location:${location.toString()}")
 
-            val url = URL(hostUrl)  // serverUrlはベースURLのみ（例: https://your-server-endpoint.com/location）
+            val url = URL(hostUrl + "/api/regist_location")  // serverUrlはベースURLのみ（例: https://your-server-endpoint.com/location）
             val urlConnection = url.openConnection() as HttpURLConnection
 
             try {
@@ -36,6 +37,7 @@ class LocationServer(val hostUrl:String)
 
                 // 位置情報をJSON形式でリクエストボディに含める
                 val jsonInputString = JSONObject().apply {
+                    put("user", "taro")
                     put("timestamp", dateToString(Date(location.time)))
                     put("latitude", location.latitude)
                     put("longitude", location.longitude)

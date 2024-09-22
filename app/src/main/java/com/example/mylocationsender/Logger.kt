@@ -4,6 +4,7 @@ import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.util.Date
+import android.util.Log
 
 object Logger {
 
@@ -45,7 +46,7 @@ object Logger {
         val logMessage = "$timestamp <$logLevel> [$tag]: $message"
 
         // コンソールに出力
-        println(logMessage)
+        Log.i(tag, logMessage)
 
         // ファイルに出力
         writeToFile(logMessage)
