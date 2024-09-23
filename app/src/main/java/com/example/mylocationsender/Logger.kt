@@ -6,6 +6,11 @@ import java.io.IOException
 import java.util.Date
 import android.util.Log
 
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+
+
 object Logger {
 
     private lateinit var logFile: File
@@ -46,7 +51,8 @@ object Logger {
         val logMessage = "$timestamp <$logLevel> [$tag]: $message"
 
         // コンソールに出力
-        Log.i(tag, logMessage)
+        println(logMessage)
+//        Log.i(tag, logMessage)
 
         // ファイルに出力
         writeToFile(logMessage)
@@ -54,15 +60,21 @@ object Logger {
 
     // ファイルにログを書き込む
     private fun writeToFile(logMessage: String) {
-        try {
-            FileWriter(logFile, true).use { writer ->
-                writer.appendLine(logMessage)
+        // コルーチンを使ってバックグラウンドスレッドで実行
+        CoroutineScope(Dispatchers.IO).launch {
+            try {
+                if (::logFile.isInitialized) {  // 初期化されているか確認
+                    FileWriter(logFile, true).use { writer ->
+                        // ログメッセージをファイルに書き込む
+                        writer.appendLine(logMessage)
+                    }
+                }
+            } catch (e: IOException) {
+                // エラーメッセージを表示（主にデバッグ用）
+                println("Failed to write log to file: ${e.message}")
             }
-        } catch (e: IOException) {
-            println("Failed to write log to file: ${e.message}")
         }
     }
-
     // アプリケーション名を取得する関数
     private fun getApplicationName(context: Context): String {
         val applicationInfo = context.applicationInfo

@@ -23,10 +23,11 @@ class LocationServer(val hostUrl:String)
         // これにより、メインスレッドをブロックせずにネットワーク操作を行うことができます。
         CoroutineScope(Dispatchers.IO).launch {
 
-            Logger.info("LocationServer", "sendLocation() start")
-//            Logger.info("LocationServer", "sendLocation() start location:${location.toString()}")
+//            Logger.info("LocationServer", "sendLocation() start")
+            Logger.info("LocationServer", "sendLocation() start location:${location.toString()}")
 
-            val url = URL(hostUrl + "/api/regist_location")  // serverUrlはベースURLのみ（例: https://your-server-endpoint.com/location）
+            val uri_str = hostUrl.removeSuffix("/") + "/api/regist_location"
+            val url = URL(uri_str)  // serverUrlはベースURLのみ（例: https://your-server-endpoint.com/location）
             val urlConnection = url.openConnection() as HttpURLConnection
 
             try {
@@ -63,7 +64,7 @@ class LocationServer(val hostUrl:String)
                 } else {
                     // エラーハンドリング
                     withContext(Dispatchers.Main) { // メインスレッド
-                        onError(throw IllegalStateException("位置情報サーバへの通信失敗 code:${urlConnection.responseCode}"))
+                        onError(IllegalStateException("位置情報サーバへの通信失敗 code:${urlConnection.responseCode}"))
                     }
                 }
             } catch (e: Exception) {
