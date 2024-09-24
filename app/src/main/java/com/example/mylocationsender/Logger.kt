@@ -1,10 +1,10 @@
+package com.example.mylocationsender
+
 import android.content.Context
-import com.example.mylocationsender.dateToString
 import java.io.File
 import java.io.FileWriter
 import java.io.IOException
 import java.util.Date
-import android.util.Log
 
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -63,7 +63,7 @@ object Logger {
         // コルーチンを使ってバックグラウンドスレッドで実行
         CoroutineScope(Dispatchers.IO).launch {
             try {
-                if (::logFile.isInitialized) {  // 初期化されているか確認
+                if (Logger::logFile.isInitialized) {  // 初期化されているか確認
                     FileWriter(logFile, true).use { writer ->
                         // ログメッセージをファイルに書き込む
                         writer.appendLine(logMessage)

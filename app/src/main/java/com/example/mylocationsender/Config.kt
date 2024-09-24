@@ -1,7 +1,6 @@
 package com.example.mylocationsender
 
 import android.content.res.Resources
-import org.json.JSONObject
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import com.google.gson.Gson
@@ -11,10 +10,10 @@ data class Config(
     val locate_interval_ms: Long,
 )
 
-fun parseUserJson(jsonString: String): Config {
-    val gson = Gson()
-    return gson.fromJson(jsonString, Config::class.java)
-}
+//fun parseUserJson(jsonString: String): Config {
+//    val gson = Gson()
+//    return gson.fromJson(jsonString, Config::class.java)
+//}
 
 // res > raw > config.json を解析する
 fun readConfig(resources: Resources): Config {
@@ -34,7 +33,7 @@ fun readConfig(resources: Resources): Config {
     val gson = Gson()
     val config = gson.fromJson(jsonString, Config::class.java)
 
-    Logger.info("Config", "readJson() end config:${config.toString()}")
+    Logger.info("Config", "readJson() end config:$config")
 
     return config
 }

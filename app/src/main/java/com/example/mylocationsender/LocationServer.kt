@@ -1,5 +1,6 @@
+package com.example.mylocationsender
+
 import android.location.Location
-import com.example.mylocationsender.dateToString
 import java.io.OutputStreamWriter
 import java.net.HttpURLConnection
 import java.net.URL
@@ -11,7 +12,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 // 位置情報管理サーバ
-class LocationServer(val hostUrl:String)
+class LocationServer(private val hostUrl:String)
 {
     // 位置情報送信
     fun sendLocation(location: Location,
@@ -23,11 +24,11 @@ class LocationServer(val hostUrl:String)
         // これにより、メインスレッドをブロックせずにネットワーク操作を行うことができます。
         CoroutineScope(Dispatchers.IO).launch {
 
-//            Logger.info("LocationServer", "sendLocation() start")
-            Logger.info("LocationServer", "sendLocation() start location:${location.toString()}")
+//            com.example.mylocationsender.Logger.info("com.example.mylocationsender.LocationServer", "sendLocation() start")
+            Logger.info("com.example.mylocationsender.LocationServer", "sendLocation() start location:$location")
 
-            val uri_str = hostUrl.removeSuffix("/") + "/api/regist_location"
-            val url = URL(uri_str)  // serverUrlはベースURLのみ（例: https://your-server-endpoint.com/location）
+            val uriStr = hostUrl.removeSuffix("/") + "/api/regist_location"
+            val url = URL(uriStr)  // serverUrlはベースURLのみ（例: https://your-server-endpoint.com/location）
             val urlConnection = url.openConnection() as HttpURLConnection
 
             try {
@@ -44,7 +45,10 @@ class LocationServer(val hostUrl:String)
                     put("longitude", location.longitude)
                 }.toString()
 
-                Logger.info("LocationServer", "connect url:${urlConnection.url.toString()} method:${urlConnection.requestMethod.toString()}, json:${jsonInputString.toString()}")
+                Logger.info(
+                    "com.example.mylocationsender.LocationServer",
+                    "connect url:${urlConnection.url} method:${urlConnection.requestMethod}, json:${jsonInputString}"
+                )
 
                 // 通信
                 urlConnection.outputStream.use { os ->
@@ -55,7 +59,10 @@ class LocationServer(val hostUrl:String)
                 }
 
                 // サーバの応答を処理
-                Logger.info("LocationServer", "response code:${urlConnection.responseCode}, message:${urlConnection.responseMessage}")
+                Logger.info(
+                    "com.example.mylocationsender.LocationServer",
+                    "response code:${urlConnection.responseCode}, message:${urlConnection.responseMessage}"
+                )
                 if (urlConnection.responseCode == HttpURLConnection.HTTP_OK) {
                     // サーバからの応答を処理
                     withContext(Dispatchers.Main) { // メインスレッド
@@ -73,7 +80,7 @@ class LocationServer(val hostUrl:String)
                 }
             } finally {
                 urlConnection.disconnect()
-                Logger.info("LocationServer", "sendLocation() end")
+                Logger.info("com.example.mylocationsender.LocationServer", "sendLocation() end")
             }
         }
     }

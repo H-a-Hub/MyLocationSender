@@ -14,7 +14,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.gms.location.Priority
 
 // 位置情報機能制御
-class Locator(val _activity: Activity)
+class Locator(private val activity: Activity)
 {
     private lateinit var _fusedLocationClient: FusedLocationProviderClient
     private lateinit var _locationRequest: LocationRequest
@@ -22,7 +22,7 @@ class Locator(val _activity: Activity)
 
     companion object {
         // 位置情報機能許可へのリクエストコード
-        public val PERMISSION_REQUEST_CODE = 1001
+        const val PERMISSION_REQUEST_CODE = 1001
     }
 
     fun startService(updateInterval: Long = 5000, callback: (Location) -> Unit)
@@ -30,7 +30,7 @@ class Locator(val _activity: Activity)
         Logger.info("Locator", "startService() start interval:$updateInterval")
 
         // 位置情報クライアントを初期化
-        _fusedLocationClient = LocationServices.getFusedLocationProviderClient(_activity)
+        _fusedLocationClient = LocationServices.getFusedLocationProviderClient(activity)
 
         // LocationRequest.Builderを使用して位置情報リクエストを作成
         _locationRequest = LocationRequest.Builder(Priority.PRIORITY_HIGH_ACCURACY, 10000)
@@ -44,7 +44,7 @@ class Locator(val _activity: Activity)
                 Logger.info("Locator", "onLocationResult")
 
                 locationResult.lastLocation?.let { location ->
-                    Logger.info("Locator", "locationResult: location:${location.toString()}")
+                    Logger.info("Locator", "locationResult: location:$location")
                     callback(location)
                 }
             }
@@ -61,17 +61,17 @@ class Locator(val _activity: Activity)
 
     private fun checkPermission(): Boolean {
         if (ActivityCompat.checkSelfPermission(
-                _activity,
+                activity,
                 Manifest.permission.ACCESS_FINE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED && ActivityCompat.checkSelfPermission(
-                _activity,
+                activity,
                 Manifest.permission.ACCESS_COARSE_LOCATION
             ) != PackageManager.PERMISSION_GRANTED
         ) {
             Logger.info("Locator", "requestPermissions")
 
             ActivityCompat.requestPermissions(
-                _activity,
+                activity,
                 arrayOf(
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION

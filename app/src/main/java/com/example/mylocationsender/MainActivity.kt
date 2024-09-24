@@ -1,7 +1,5 @@
 package com.example.mylocationsender
 
-import LocationServer
-import Logger
 import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.location.Location
@@ -91,7 +89,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     private val onLocationUpdate: (Location) -> Unit = { location ->
 
-        Logger.info("MainActivity", "onLocationUpdate() location:${location.toString()}")
+        Logger.info("MainActivity", "onLocationUpdate() location:$location")
 
         // サーバに位置情報を送信
         _locationSv.sendLocation(location,
@@ -114,7 +112,7 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
     // アクティビティがフォアグラウンドに出て、操作可能な状態になる
     override fun onResume() {
-        Logger.info("MainActivity", "onReume() start")
+        Logger.info("MainActivity", "onResume() start")
         super.onResume()
         _mapView.onResume()
     }
