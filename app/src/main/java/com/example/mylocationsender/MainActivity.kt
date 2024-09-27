@@ -93,12 +93,11 @@ class MainActivity : AppCompatActivity(), OnMapReadyCallback {
 
         // サーバに位置情報を送信
         _locationSv.sendLocation(location,
-            onSuccess = {
-                // 通信成功はユーザーに見せる必要なし
-            },
-            onError = { e ->
-                Logger.error("MainActivity", "e:$e")
-                // TODO: 通信エラーが起きていることをトースト表示したい
+            onResponse = { statusCode ->
+                if (statusCode != 201) {
+                    // TODO: 登録エラーをユーザーに通知したい
+                    Logger.warn("MainActivity", "not save")
+                }
             })
 
         // 画面にLocationをテキスト表示

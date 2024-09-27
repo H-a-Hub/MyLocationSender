@@ -2,10 +2,13 @@ package com.example.mylocationsender
 
 import android.location.Location
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.runBlocking
-import org.junit.Assert.assertTrue
+import org.junit.Assert.assertEquals
+import org.junit.Assert.fail
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.net.HttpURLConnection
 
 //　通信を伴うユニットテストはAndroidテストで行うこと
 //  通常のユニットテスト環境では、ネットワークアクセスが禁止されている
@@ -13,10 +16,35 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 class LocationServerInstrumentedTest {
 
+    private val _hostUrl = "https://my-location-monitor-93009588055.asia-east1.run.app"
+
+    @Test
+    fun testCheckAccessible() = runBlocking {
+
+        // CompletableDeferredを使用して、非同期処理の完了を待機する
+        val deferred = CompletableDeferred<Unit>()
+
+        // テスト対象のLocationServerインスタンスを作成
+        val server = LocationServer(_hostUrl)
+
+        // 実際にサーバに送信して、成功・失敗を確認
+        server.checkAccessible { statusCode ->
+            assertEquals("status code is not success", HttpURLConnection.HTTP_OK, statusCode)
+        }
+
+        // コールバックが完了するまで待機する
+        deferred.await()
+    }
+
+
     @Test
     fun testSendLocationToServer() = runBlocking {
+
+        // CompletableDeferredを使用して、非同期処理の完了を待機する
+        val deferred = CompletableDeferred<Unit>()
+
         // テスト対象のLocationServerインスタンスを作成
-        val server = LocationServer("https://your-server-endpoint.com")
+        val server = LocationServer(_hostUrl)
 
         // ダミーのLocationオブジェクトを作成
         val testLocation = Location("").apply {
@@ -26,20 +54,13 @@ class LocationServerInstrumentedTest {
         }
 
         // 実際にサーバに送信して、成功・失敗を確認
-        var success = false
-        var error: Exception? = null
-
         server.sendLocation(
             location = testLocation,
-            onSuccess = {
-                success = true
-            },
-            onError = { e ->
-                error = e
-            }
-        )
+            onResponse = { statusCode ->
+                assertEquals("status code is not success", HttpURLConnection.HTTP_CREATED, statusCode)
+            })
 
-        // 成功または失敗をアサート
-        assertTrue("Location sending failed with error: $error", success)
+        // コールバックが完了するまで待機する
+        deferred.await()
     }
 }
